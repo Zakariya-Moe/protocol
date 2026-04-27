@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Protocol — Stop guessing. Own your protocol.</title>
+<meta name="description" content="The injection protocol manager for the modern wellness era. Built for GLP-1 users and peptide stackers who deserve more than a Notes app." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Geist+Mono:wght@400;500&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0b0d;
+    --bg-elev: #111316;
+    --bg-card: #15181c;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.14);
+    --text: #f4f4f3;
+    --text-muted: #9a9a98;
+    --text-dim: #6b6b69;
+    --accent: #c9d4b5;        /* sage — the Calm in the mix */
+    --accent-warm: #e8d9bf;   /* warm cream highlight */
+    --accent-glow: rgba(201, 212, 181, 0.15);
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Subtle ambient glow in background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80vw;
+    height: 60vh;
+    background: radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(80px);
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    padding: 28px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+  }
+
+  .logo {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+
+  .nav-link {
+    font-size: 14px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link:hover { color: var(--text); }
+
+  /* ===== HERO ===== */
+  .hero {
+    padding: 80px 0 100px;
+    text-align: center;
+    position: relative;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.02);
+    margin-bottom: 32px;
+    animation: fadeUp 0.8s ease 0.1s both;
+  }
+
+  .eyebrow-pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(40px, 7vw, 72px);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    max-width: 850px;
+    margin: 0 auto 24px;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  .hero-sub {
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--text-muted);
+    max-width: 580px;
+    margin: 0 auto 48px;
+    animation: fadeUp 0.8s ease 0.3s both;
+  }
+
+  /* ===== EMAIL FORM ===== */
+  .email-form {
+    display: flex;
+    gap: 8px;
+    max-width: 460px;
+    margin: 0 auto;
+    padding: 6px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeUp 0.8s ease 0.4s both;
+  }
+
+  .email-form:focus-within {
+    border-color: var(--border-strong);
+    box-shadow: 0 0 0 4px var(--accent-glow);
+  }
+
+  .email-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 15px;
+    padding: 12px 20px;
+  }
+
+  .email-input::placeholder { color: var(--text-dim); }
+
+  .email-submit {
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    border-radius: 100px;
+    padding: 12px 24px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .email-submit:hover {
+    background: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .email-submit:active { transform: translateY(0); }
+
+  .form-note {
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+    animation: fadeUp 0.8s ease 0.5s both;
+  }
+
+  .form-note strong {
+    color: var(--accent-warm);
+    font-weight: 500;
+  }
+
+  /* ===== PRODUCT MOCKUP ===== */
+  .mockup-wrap {
+    margin-top: 80px;
+    position: relative;
+    animation: fadeUp 1s ease 0.6s both;
+  }
+
+  .mockup {
+    max-width: 380px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, var(--bg-elev) 0%, var(--bg-card) 100%);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 24px;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.02),
+      0 30px 80px rgba(0, 0, 0, 0.5),
+      0 0 60px var(--accent-glow);
+    position: relative;
+  }
+
+  .mockup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+
+  .mockup-title {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  .mockup-time {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .mockup-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 12px;
+  }
+
+  .mockup-card-label {
+    font-family: 'Geist Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .mockup-dose {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .mockup-dose-amount {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  .mockup-dose-amount span {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-left: 4px;
+  }
+
+  .mockup-dose-compound {
+    font-size: 13px;
+    color: var(--accent);
+    font-family: 'Geist Mono', monospace;
+  }
+
+  .mockup-curve {
+    height: 80px;
+    margin-top: 12px;
+    position: relative;
+  }
+
+  .mockup-curve svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .mockup-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mockup-row:last-child { border-bottom: none; }
+
+  .mockup-row-label {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .mockup-row-value {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .mockup-row-value.success { color: var(--accent); }
+
+  /* ===== SECTIONS ===== */
+  section {
+    padding: 100px 0;
+    position: relative;
+  }
+
+  .section-eyebrow {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    max-width: 700px;
+    margin-bottom: 24px;
+  }
+
+  h2 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .section-lead {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 600px;
+    line-height: 1.55;
+  }
+
+  /* ===== PROBLEM SECTION ===== */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 64px;
+  }
+
+  .problem-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .problem-card:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-2px);
+  }
+
+  .problem-quote {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.4;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .problem-quote::before {
+    content: '"';
+    font-size: 32px;
+    color: var(--accent);
+    line-height: 0;
+    margin-right: 4px;
+    vertical-align: -4px;
+  }
+
+  .problem-quote::after {
+    content: '"';
+    font-size: 32px;
+    color: var(--accent);
+    line-height: 0;
+    margin-left: 2px;
+    vertical-align: -4px;
+  }
+
+  .problem-attribution {
+    font-family: 'Geist Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ===== FEATURES SECTION ===== */
+  .features {
+    background: var(--bg-elev);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-top: 64px;
+  }
+
+  .feature {
+    padding: 8px 0;
+  }
+
+  .feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(201, 212, 181, 0.08);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+    color: var(--accent);
+  }
+
+  .feature h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+
+  .feature p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ===== AUDIENCE SECTION ===== */
+  .audience-list {
+    margin-top: 48px;
+    border-top: 1px solid var(--border);
+  }
+
+  .audience-row {
+    display: grid;
+    grid-template-columns: 80px 240px 1fr;
+    gap: 32px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: baseline;
+  }
+
+  .audience-num {
+    font-family: 'Geist Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .audience-name {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .audience-desc {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  /* ===== TRUST SECTION ===== */
+  .trust {
+    text-align: center;
+    padding: 80px 0;
+  }
+
+  .trust-text {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .trust-text strong {
+    color: var(--text);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  /* ===== FINAL CTA ===== */
+  .final-cta {
+    padding: 100px 0 120px;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    background: linear-gradient(180deg, transparent 0%, var(--bg-elev) 100%);
+  }
+
+  .final-cta h2 {
+    margin: 0 auto 24px;
+  }
+
+  .final-cta .section-lead {
+    margin: 0 auto 40px;
+  }
+
+  .founder-pricing {
+    display: inline-block;
+    padding: 10px 18px;
+    background: rgba(232, 217, 191, 0.06);
+    border: 1px solid rgba(232, 217, 191, 0.2);
+    border-radius: 100px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    color: var(--accent-warm);
+    letter-spacing: 0.05em;
+    margin-bottom: 32px;
+  }
+
+  .founder-pricing strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .footer-links a:hover { color: var(--text-muted); }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ===== SUCCESS STATE ===== */
+  .success-message {
+    display: none;
+    background: rgba(201, 212, 181, 0.08);
+    border: 1px solid rgba(201, 212, 181, 0.2);
+    border-radius: 100px;
+    padding: 14px 24px;
+    color: var(--accent);
+    font-size: 14px;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  .success-message.show { display: block; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .hero { padding: 48px 0 64px; }
+    section { padding: 64px 0; }
+    .problem-grid,
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+    .audience-row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .audience-num { display: none; }
+    footer {
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+    }
+    .email-form {
+      flex-direction: column;
+      border-radius: var(--radius-md);
+      padding: 8px;
+    }
+    .email-input { padding: 14px 16px; }
+    .email-submit {
+      border-radius: var(--radius-sm);
+      padding: 14px 24px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ===== NAV ===== -->
+  <nav>
+    <div class="logo">
+      <span class="logo-dot"></span>
+      <span>Protocol</span>
+    </div>
+    <a href="#waitlist" class="nav-link">Join waitlist →</a>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="eyebrow">
+      <span class="eyebrow-pulse"></span>
+      <span>Now in private beta · Q2 2026</span>
+    </div>
+
+    <h1>
+      Stop guessing.<br>
+      <em>Own your protocol.</em>
+    </h1>
+
+    <p class="hero-sub">
+      The injection protocol manager built for people on GLP-1s, peptides, and HRT — who deserve more than a Notes app and napkin math.
+    </p>
+
+    <form class="email-form" id="waitlist-form">
+      <input type="email" class="email-input" placeholder="you@example.com" required />
+      <button type="submit" class="email-submit">Get early access</button>
+    </form>
+
+    <p class="form-note">
+      Founders join at <strong>$7.99/mo for life</strong> &nbsp;·&nbsp; Regular price $14.99/mo
+    </p>
+
+    <div class="success-message" id="success">
+      ✓ You're in. We'll be in touch when early access opens.
+    </div>
+
+    <!-- ===== MOCKUP ===== -->
+    <div class="mockup-wrap">
+      <div class="mockup">
+        <div class="mockup-header">
+          <div class="mockup-title">Today's protocol</div>
+          <div class="mockup-time">SUN · 8:42 PM</div>
+        </div>
+
+        <div class="mockup-card">
+          <div class="mockup-card-label">Next dose</div>
+          <div class="mockup-dose">
+            <div class="mockup-dose-amount">2.5<span>mg</span></div>
+            <div class="mockup-dose-compound">tirzepatide</div>
+          </div>
+          <div class="mockup-curve">
+            <svg viewBox="0 0 320 80" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="curveGrad" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#c9d4b5" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#c9d4b5" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,70 Q40,68 60,55 T120,25 T180,15 T240,30 T320,55 L320,80 L0,80 Z" fill="url(#curveGrad)" />
+              <path d="M0,70 Q40,68 60,55 T120,25 T180,15 T240,30 T320,55" stroke="#c9d4b5" stroke-width="1.5" fill="none" />
+              <circle cx="180" cy="15" r="3" fill="#c9d4b5" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="mockup-row">
+          <div class="mockup-row-label">Last injection</div>
+          <div class="mockup-row-value">Right thigh · 6d ago</div>
+        </div>
+        <div class="mockup-row">
+          <div class="mockup-row-label">Side effects this week</div>
+          <div class="mockup-row-value success">None logged</div>
+        </div>
+        <div class="mockup-row">
+          <div class="mockup-row-label">Vial remaining</div>
+          <div class="mockup-row-value">12 / 20 doses</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ===== PROBLEM ===== -->
+<div class="container">
+  <section>
+    <span class="section-eyebrow">001 · The problem</span>
+    <h2>You're managing a $10,000/year protocol in <em>Apple Notes.</em></h2>
+    <p class="section-lead">
+      The wellness apps weren't built for this. Calorie counters can't track half-lives. Habit trackers can't do reconstitution math. So you cobble together a system — and hope you're not making mistakes.
+    </p>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <p class="problem-quote">Did I already inject this week or am I thinking of last week?</p>
+        <p class="problem-attribution">r/Tirzepatide · 2.4k upvotes</p>
+      </div>
+      <div class="problem-card">
+        <p class="problem-quote">Can someone double-check my BPC reconstitution math? It's midnight.</p>
+        <p class="problem-attribution">r/Peptides · daily occurrence</p>
+      </div>
+      <div class="problem-card">
+        <p class="problem-quote">My spreadsheet has 14 tabs and I still don't know my next pin time.</p>
+        <p class="problem-attribution">Every power user, eventually</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== FEATURES ===== -->
+<section class="features">
+  <div class="container">
+    <span class="section-eyebrow">002 · What it does</span>
+    <h2>Three things, done <em>completely.</em></h2>
+    <p class="section-lead">
+      No bloat. No "Coming Soon" tabs. The features that ship will be the only features that exist — and they'll work perfectly.
+    </p>
+
+    <div class="features-grid">
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M2 12h20"/>
+          </svg>
+        </div>
+        <h3>One-tap dose log</h3>
+        <p>Open the app, tap once, you're done. Site rotation, dose, timestamp — captured. Open at 8pm Sunday, log Monday's shot in three seconds flat.</p>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M9 9h6v6H9z"/>
+          </svg>
+        </div>
+        <h3>Visual reconstitution</h3>
+        <p>Pick your vial size and BAC water volume. See exactly where the liquid sits on a 30, 50, or 100-unit syringe. No more napkin math. No more midnight Reddit threads.</p>
+      </div>
+
+      <div class="feature">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 17l6-6 4 4 8-8"/>
+            <path d="M21 7v0M21 7h-6"/>
+          </svg>
+        </div>
+        <h3>Serum concentration curves</h3>
+        <p>Visualize how your stack actually behaves over time. See peaks, troughs, and overlaps for multiple compounds with different half-lives. Built on real pharmacokinetic data.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== AUDIENCE ===== -->
+<div class="container">
+  <section>
+    <span class="section-eyebrow">003 · Who it's for</span>
+    <h2>Built for the <em>full spectrum</em> of injection protocols.</h2>
+
+    <div class="audience-list">
+      <div class="audience-row">
+        <div class="audience-num">01</div>
+        <div class="audience-name">GLP-1 patients</div>
+        <div class="audience-desc">On Ozempic, Mounjaro, Wegovy, or compounded semaglutide. Track your weekly shot, log side effects, and protect your muscle while you lose fat.</div>
+      </div>
+      <div class="audience-row">
+        <div class="audience-num">02</div>
+        <div class="audience-name">Peptide stackers</div>
+        <div class="audience-desc">Running BPC-157, TB-500, CJC-1295, or a five-compound longevity protocol. Manage half-lives, rotation, and supply inventory in one place.</div>
+      </div>
+      <div class="audience-row">
+        <div class="audience-num">03</div>
+        <div class="audience-name">HRT patients</div>
+        <div class="audience-desc">On testosterone, growth hormone, or clinic-prescribed protocols. Stay on schedule, share data with your physician, never miss a titration.</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== TRUST ===== -->
+<div class="container">
+  <section class="trust">
+    <p class="trust-text">
+      <strong>Protocol is an educational and tracking tool — not medical advice.</strong> We don't prescribe, we don't recommend, we don't sell compounds. Your data stays yours, encrypted, and never sold.
+    </p>
+  </section>
+</div>
+
+<!-- ===== FINAL CTA ===== -->
+<section class="final-cta">
+  <div class="container" id="waitlist">
+    <span class="section-eyebrow">004 · Join the waitlist</span>
+    <h2>Be one of the first <em>500</em>.</h2>
+    <p class="section-lead">
+      Founder pricing locked in for life. Direct line to me as I build. First access when early beta opens.
+    </p>
+
+    <div class="founder-pricing">
+      Founders: <strong>$7.99/mo</strong> forever &nbsp;·&nbsp; Regular: $14.99/mo
+    </div>
+
+    <form class="email-form" id="waitlist-form-2">
+      <input type="email" class="email-input" placeholder="you@example.com" required />
+      <button type="submit" class="email-submit">Claim founder pricing</button>
+    </form>
+
+    <p class="form-note">No spam. One email when it's ready. Unsubscribe anytime.</p>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<div class="container">
+  <footer>
+    <div>© 2026 Protocol · Built in public</div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="mailto:hello@protocol.app">Contact</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // Waitlist form handling - store emails in memory for now
+  // Replace with real backend (Supabase, ConvertKit, etc.) when ready
+  const collectedEmails = [];
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const input = e.target.querySelector('.email-input');
+    const email = input.value.trim();
+    if (!email) return;
+
+    collectedEmails.push({ email, timestamp: new Date().toISOString() });
+    console.log('Waitlist signup:', email);
+    console.log('All signups:', collectedEmails);
+
+    // Show success state
+    e.target.style.display = 'none';
+    const success = document.getElementById('success');
+    if (success) success.classList.add('show');
+
+    input.value = '';
+  }
+
+  document.getElementById('waitlist-form').addEventListener('submit', handleSubmit);
+  document.getElementById('waitlist-form-2').addEventListener('submit', handleSubmit);
+</script>
+
+</body>
+</html>
